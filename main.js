@@ -4,11 +4,15 @@ window.onload = async () => {
   const copy = document.querySelector(".copy")
   const camera = document.querySelector(".camera")
   const tools = document.querySelector(".tools")
+  const start = document.querySelector(".start")
   const hostid = window.location.hash.slice(1);
   // const connections = [];
 
   // hide on client tools
-  if (hostid) tools.style.display = "none";
+  if (hostid) {
+    tools.style.display = "none"
+    start.style.display = "none";
+  };
   
   // prevent download camera image
   canvas.oncontextmenu = e => e.preventDefault();
@@ -23,6 +27,9 @@ window.onload = async () => {
   window.addEventListener('resize', resizeCanvas);
   resizeCanvas(); // Початкове встановлення розміру
 
+  start.onclick = () => {
+
+  }
   // Отримання списку серверів
   let iceServers = await fetch("https://fulldroper.metered.live/api/v1/turn/credentials?apiKey=20b057434f2dba67cce42dbf43a66658ba5d")
     .then(r => r.json());
@@ -145,31 +152,34 @@ window.onload = async () => {
 
   peer.on("open", async (id) => {
     if (!hostid) {
-      // Транслятор (отримання камери)
-      streamController.stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
-      const cameras = await streamController.getVideoDevices()
-      
-      // зміна камери 
-      camera.onclick = async () => {
-        if (cameras.length > 0) {
-          await streamController.switchCamera()
-        } else {
-          console.log("Камери не знайдено.");
+      start.onclick = async () => {
+        start.style.display = "none";
+        // Транслятор (отримання камери)
+        streamController.stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+        const cameras = await streamController.getVideoDevices()
+        
+        // зміна камери 
+        camera.onclick = async () => {
+          if (cameras.length > 0) {
+            await streamController.switchCamera()
+          } else {
+            console.log("Камери не знайдено.");
+          }
+        };
+        // запис hostid в hash
+        window.location.hash = id;
+        // запис адреси в буфер обміну
+        copy.onclick = () => {
+          navigator.clipboard.writeText(window.location.href)  
         }
-      };
-      // запис hostid в hash
-      window.location.hash = id;
-      // запис адреси в буфер обміну
-      copy.onclick = () => {
-        navigator.clipboard.writeText(window.location.href)  
+  
+        peer.on("call", c => {
+          if (!streamController.stream) return console.error("Локальний потік недоступний");
+          c.answer(streamController.stream);
+        });
+  
+        // peer.on("connection", c => connections.push(c))
       }
-
-      peer.on("call", c => {
-        if (!streamController.stream) return console.error("Локальний потік недоступний");
-        c.answer(streamController.stream);
-      });
-
-      // peer.on("connection", c => connections.push(c))
     } else {
       // Функція створення пустого медіа потоку (аудіо + відео)
       const createMediaStreamFake = (opt = {}) => {
@@ -211,4 +221,5 @@ window.onload = async () => {
   // })
 
   peer.on("error", e => console.error("Помилка Peer.js:", e));
+
 };
