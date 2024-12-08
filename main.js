@@ -24,13 +24,13 @@ window.onload = async () => {
   resizeCanvas(); // Початкове встановлення розміру
 
   // Отримання списку серверів
-  let iceServers //= await fetch("https://fulldroper.metered.live/api/v1/turn/credentials?apiKey=20b057434f2dba67cce42dbf43a66658ba5d")
-  //   .then(r => r.json());
+  let iceServers = await fetch("https://fulldroper.metered.live/api/v1/turn/credentials?apiKey=20b057434f2dba67cce42dbf43a66658ba5d")
+    .then(r => r.json());
   
   if (!iceServers || iceServers.error) {
     console.error("TURN сервер недоступний")
   };
-  iceServers = []
+  // iceServers = []
 
   // Створення піру
   const peer = new Peer({
