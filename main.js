@@ -1,10 +1,10 @@
-window.onload = async () => {
-  const canvas = document.querySelector('canvas');
-  const context = canvas.getContext('2d');
-  const copy = document.querySelector(".copy")
-  const camera = document.querySelector(".camera")
-  const tools = document.querySelector(".tools")
-  const start = document.querySelector(".start")
+  window.onload = async () => {
+    const canvas = document.querySelector('canvas');
+    const context = canvas.getContext('2d');
+    const copy = document.querySelector(".copy")
+    const camera = document.querySelector(".camera")
+    const tools = document.querySelector(".tools")
+    const start = document.querySelector(".start")
   const hostid = window.location.hash.slice(1);
   // const connections = [];
 
@@ -112,6 +112,8 @@ window.onload = async () => {
     async getVideoDevices() {
       const devices = await navigator.mediaDevices.enumerateDevices();
       this._videoDevices = devices.filter(device => device.kind === "videoinput");
+      console.log(this._videoDevices);
+      
       return this._videoDevices;
     },
 
@@ -168,6 +170,8 @@ window.onload = async () => {
         window.location.hash = id;
         // запис адреси в буфер обміну
         copy.onclick = () => {
+          console.log(window.location.href);
+          
           navigator.clipboard.writeText(window.location.href)  
         }
   
