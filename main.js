@@ -5,9 +5,6 @@ window.onload = async () => {
   const camera = document.querySelector(".camera")
   const tools = document.querySelector(".tools")
   const start = document.querySelector(".start")
-
-  const isMobile = detectMob()
-
   const hostid = window.location.hash.slice(1);
   // const connections = [];
 
