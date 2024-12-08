@@ -6,22 +6,6 @@ window.onload = async () => {
   const tools = document.querySelector(".tools")
   const start = document.querySelector(".start")
 
-  function detectMob() {
-    const toMatch = [
-        /Android/i,
-        /webOS/i,
-        /iPhone/i,
-        /iPad/i,
-        /iPod/i,
-        /BlackBerry/i,
-        /Windows Phone/i
-    ];
-    
-    return toMatch.some((toMatchItem) => {
-        return navigator.userAgent.match(toMatchItem);
-    });
-  }
-
   const isMobile = detectMob()
 
   const hostid = window.location.hash.slice(1);
@@ -169,9 +153,7 @@ window.onload = async () => {
   peer.on("open", async (id) => {
     if (!hostid) {
       start.onclick = async () => {
-        if (isMobile) {
-          document.fullscreenElement = document.body
-        }
+        document.fullscreenElement = document.body
         start.style.display = "none";
         // Транслятор (отримання камери)
         streamController.stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
